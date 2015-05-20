@@ -1,0 +1,47 @@
+<?php
+    function clock_angle_menu() {
+        $items['angle_maker'] = array(
+            'title' => "Maker of the clock angles",
+            'page callback' => 'drupal_get_form',
+            'page arguments' => array('angle_form'),
+            'access callback' => TRUE,
+            'type' => MENU_NORMAL_ITEM,
+        );
+        $items['angle_success'] = array(
+            'title' => 'It\'s an angle!',
+            'page callback' => 'angle_success_page',
+            'access callback' => TRUE,
+            'type' => MENU_CALLBACK,
+        );
+
+        return $items;
+    }
+
+    function angle_form() {
+        $form['time'] = array(
+            '#title' => 'time',
+            '#type' => 'textfield',
+            '#description' => t('Type a time!'),
+        );
+        $form['submit'] = array(
+            '#type' => 'submit',
+            '#value' => 'Calculate angle',
+        );
+        return $form;
+    }
+
+    function angle_form_submit($form, &$form_state) {
+        $time = explode(":", $form_state['values']['time']);
+        $hour = $time[0];
+        $minute = $time[1];
+        $angle = abs(
+        (((($hour + ($minute / 60)) / 12) - 0.5) - (($minute / 60) - 0.5)) * 360
+    );
+        $_SESSION['angle_output'] = ($angle > 180) ? 360 - $angle : $angle;
+        $form_state['redirect'] = 'angle_success';
+    }
+
+    function angle_success_page() {
+        $angle = $_SESSION['angle_output'];
+        return '<p>Your angle is: ' . $angle . '&#176;</p>';
+    }

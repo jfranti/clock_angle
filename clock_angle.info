@@ -1,0 +1,5 @@
+name = Clock Angle
+description = Compute the smallest angle between the minute hand and the hour hand on an analog timepiece.
+package = Epicodus Examples
+core = 7.x
+files[] = clock_angle.module
